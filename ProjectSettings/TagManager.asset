@@ -9,6 +9,8 @@ TagManager:
   - Laser
   - enemy
   - Interaction
+  - Station
+  - Rock
   layers:
   - Default
   - TransparentFX

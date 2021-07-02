@@ -35,8 +35,10 @@ public class ObjectPooler : MonoBehaviour
             for (int i = 0; i < p.size; i++)
             {
                 var obj = Instantiate(p.prefabs[Random.Range(0, p.prefabs.Length)]);
+                obj.transform.localScale *= Random.Range(5,15);
                 obj.SetActive(false);
                 objPool.Enqueue(obj);
+                obj.tag = "Rock";
             }
             poolDict.Add(p.tag, objPool);
         }

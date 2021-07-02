@@ -25,11 +25,7 @@ public class SpawnAsteroids : MonoBehaviour
 
     public Vector3 RandomPos()
     {
-
-        float distx = Random.Range(innerRadius, outerRadius);
-        float disty = Random.Range(innerRadius, outerRadius);
-        float distz = Random.Range(innerRadius, outerRadius);
-        return new Vector3(distx, disty, distz);
+        return Random.onUnitSphere* Random.Range(innerRadius, outerRadius);
     }
     public Quaternion RandomRot()
     {

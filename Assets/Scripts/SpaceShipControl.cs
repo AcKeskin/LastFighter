@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SpaceShipControl : MonoBehaviour
+public class SpaceShipControl : MDestroyable
 {
     public enum BulletType
     {
@@ -29,6 +29,11 @@ public class SpaceShipControl : MonoBehaviour
     public GameObject ExplosionGO;
     public GameObject BulletHitGO;
     public GameObject ShipModel;
+
+    [SerializeField]
+    private Image ShipDMGIndicator;
+
+    public float maxHealth = 200f; // will be used while showing percentage of dmg taken
 
     [SerializeField]
     private Texture[] WeaponIcons;
@@ -74,6 +79,7 @@ public class SpaceShipControl : MonoBehaviour
     float distFromHorizontal; //Distance in pixel from the horizontal center of the screen.
     void Start()
     {
+        health = maxHealth;
         bulletDMGs = new float[3] { 5,50,85};
         currentBullet = BulletType.Bullet;
         AmmoCounts = new int[3] { 300, 0, 0}; // Only turret has ammo at the beginning
@@ -198,7 +204,16 @@ public class SpaceShipControl : MonoBehaviour
         cash += amount;
         cashText.text = cash + " $";
     }
-
+    public override void TakeDamage(float dmg)
+    {
+        health -= dmg;
+        print(health + "/" +maxHealth);
+        ShipDMGIndicator.fillAmount = (health / maxHealth);
+        if (health <= 0)
+        {
+            Explode();
+        }
+    }
 
     void UpdateBanking()
     {
@@ -254,7 +269,8 @@ public class SpaceShipControl : MonoBehaviour
     }
 
     public IEnumerator  FireRocket()
-{
+    {
+        ChangeIconColor(Color.red);
         canShoot = false;
         Ray shotRay;
         if (!cross.center_lock)
@@ -276,13 +292,13 @@ public class SpaceShipControl : MonoBehaviour
         }
         fired.transform.SetParent(this.transform);
         yield return new WaitForSeconds(WeaponCooldowns[1]);
-        //ChangeCrossColor(Color.white);
+        ChangeIconColor(Color.white);
         canShoot = true;
         AmmoCounts[1] -= 1;
     }
     public IEnumerator  FireLaser()
 {
-        //ChangeCrossColor(Color.red);
+        ChangeIconColor(Color.red);
         canShoot = false;
         Ray shotRay;
         if (!cross.center_lock)
@@ -306,13 +322,14 @@ public class SpaceShipControl : MonoBehaviour
         }
         GameObject.Destroy(fired, 3f);
         yield return new WaitForSeconds(WeaponCooldowns[2]);
-        //ChangeCrossColor(Color.red);
+        ChangeIconColor(Color.white);
         canShoot = true;
         AmmoCounts[2] -= 1;
     }
     public IEnumerator FireBullet()
     {
-        if(!muzzleL.isPlaying && !muzzleR.isPlaying)
+        ChangeIconColor(Color.red);
+        if (!muzzleL.isPlaying && !muzzleR.isPlaying)
         {
             muzzleL.Play();
             muzzleR.Play();
@@ -343,6 +360,7 @@ public class SpaceShipControl : MonoBehaviour
         }
         AmmoCounts[0] -= 2;
         yield return new WaitForSeconds(WeaponCooldowns[0]);
+        ChangeIconColor(Color.white);
         if (muzzleL.isPlaying && muzzleR.isPlaying)
         {
             muzzleR.Stop();
@@ -350,22 +368,9 @@ public class SpaceShipControl : MonoBehaviour
         }
         canShoot = true;
     }
-
-    public void ChangeCrossColor(Color c)
+    public void ChangeIconColor(Color c)
     {
-        Texture2D t = (Texture2D)cross.crosshairTexture;
-        var colors = t.GetPixels();
-        for (int i = 0; i < colors.Length; i++)
-        {
-            if (colors[i] == lastColorOfCrosshair)
-            {
-                colors[i] = c;
-            }
-
-        }
-        t.SetPixels(colors);
-        t.Apply();
-        lastColorOfCrosshair = c;
+        currentWeaponIcon.GetComponent<RawImage>().color = c;
     }
 
     public void UpdateAmmo()
@@ -375,10 +380,10 @@ public class SpaceShipControl : MonoBehaviour
     }
 
 
-    public void OnChildCollided()
-    {
 
-        foreach(Transform child in ShipModel.transform)
+    public override void Explode()
+    {
+        foreach (Transform child in ShipModel.transform)
         {
             var handler = child.GetComponent<ChildCollisionHandler>();
             if (handler != null)
@@ -388,13 +393,10 @@ public class SpaceShipControl : MonoBehaviour
             }
         }
         transform.DetachChildren();
-        Destroy(this);
-    }
-
-    private void OnDestroy()
-    {
-        if(cross != null && !cross.enabled)
+        if (cross != null && !cross.enabled)
+        {
             cross.enabled = false;
+        }
         foreach (Transform child in ShipModel.transform)
         {
             if (child.gameObject.GetComponent<MeshCollider>() != null)
@@ -406,6 +408,7 @@ public class SpaceShipControl : MonoBehaviour
                 Destroy(child.gameObject);
             }
         }
+        Time.timeScale = 0.25f;
         var explode = Instantiate(ExplosionGO);
         explode.transform.position = transform.position;
         explode.transform.localScale *= 5;

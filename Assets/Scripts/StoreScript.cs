@@ -67,15 +67,30 @@ public class StoreScript : MonoBehaviour
 
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.transform.root.tag == "Player" && !t_ShopAvailable.enabled)
+        {
+            canShop = true;
+            t_ShopAvailable.enabled = true;
+        }
+    }
+
     private void OnTriggerEnter(Collider other) //Show "Can use shop" text
     {
-        canShop = true;
-        t_ShopAvailable.enabled = true;
+        if(other.transform.root.tag == "Player")
+        {
+            canShop = true;
+            t_ShopAvailable.enabled = true;
+        }
     }
     private void OnTriggerExit(Collider other) //Hide "Can use shop" text
     {
-        canShop = false;
-        t_ShopAvailable.enabled = false;
+        if (other.transform.root.tag == "Player")
+        {
+            canShop = false;
+            t_ShopAvailable.enabled = false;
+        }
     }
 
     public void TriggerShop()
