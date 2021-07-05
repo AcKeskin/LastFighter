@@ -78,7 +78,7 @@ public class StoreScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) //Show "Can use shop" text
     {
-        if(other.transform.root.tag == "Player")
+        if(other.transform.root.tag == "Player" && other.transform.tag != "Laser" && other.transform.parent.tag != "Rocket")
         {
             canShop = true;
             t_ShopAvailable.enabled = true;
@@ -86,7 +86,7 @@ public class StoreScript : MonoBehaviour
     }
     private void OnTriggerExit(Collider other) //Hide "Can use shop" text
     {
-        if (other.transform.root.tag == "Player")
+        if (other.transform.root.tag == "Player" && other.transform.tag != "Laser" && other.transform.parent.tag != "Rocket")
         {
             canShop = false;
             t_ShopAvailable.enabled = false;

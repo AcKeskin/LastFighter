@@ -280,6 +280,7 @@ public class SpaceShipControl : MDestroyable
         RaycastHit hit;
         GameObject fired;
         fired = Instantiate(RocketGO) as GameObject;
+        fired.GetComponent<RocketMovement>().dmg = bulletDMGs[1];
         fired.transform.position = rocketSpawnPoint.position;
         fired.transform.GetChild(0).gameObject.tag = "Rocket";
         if (Physics.Raycast(shotRay, out hit))
@@ -308,6 +309,7 @@ public class SpaceShipControl : MDestroyable
         RaycastHit hit;
         GameObject fired;
         fired = Instantiate(LaserGO) as GameObject;
+        fired.GetComponent<ShotBehavior>().dmg = bulletDMGs[2];
         fired.transform.localScale *= 0.5f;
         fired.transform.position = laserSpawnPoint.position;
         fired.gameObject.tag = "Laser";
@@ -351,10 +353,18 @@ public class SpaceShipControl : MDestroyable
             {
                 r.AddForce(-hit.normal * 3f) ;
             }
-            var f = hit.collider.gameObject.GetComponent<MDestroyable>();
+            hit.collider.gameObject.TryGetComponent<MDestroyable>(out var f);
+            print(hit.collider.gameObject.name);
             if(f != null)
             {
                 f.TakeDamage(bulletDMGs[0]*2);
+            }else if (hit.collider.gameObject.transform.parent != null)
+            {
+                hit.collider.gameObject.transform.parent.TryGetComponent<MDestroyable>(out var p);
+                if (p != null)
+                {
+                    p.TakeDamage(bulletDMGs[0] * 2);
+                }
             }
 
         }

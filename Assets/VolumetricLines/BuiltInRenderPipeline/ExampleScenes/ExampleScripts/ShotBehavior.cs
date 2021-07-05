@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 
 public class ShotBehavior : MonoBehaviour {
-
+    public float dmg;
 	// Use this for initialization
 	void Start () {
 
@@ -19,6 +19,15 @@ public class ShotBehavior : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
+        collision.collider.gameObject.TryGetComponent<MDestroyable>(out var md);
+        if (md != null)
+        {
+            md.TakeDamage(dmg);
+        }
+        else if (collision.collider.transform.root.TryGetComponent<MDestroyable>(out var dest))
+        {
+            dest.TakeDamage(dmg);
+        }
         Destroy(gameObject);
     }
 }

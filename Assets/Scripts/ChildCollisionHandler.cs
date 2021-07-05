@@ -7,7 +7,6 @@ public class ChildCollisionHandler : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print(other.name + " hit ship");
         if (other.transform.root.tag.Contains("Station"))
         {
             transform.root.GetComponent<MDestroyable>().TakeDamage(15);
@@ -20,7 +19,6 @@ public class ChildCollisionHandler : MonoBehaviour
     }
     /*private void OnCollisionEnter(Collision collision)
     {
-        print(collision.collider.name + " hit ship");
         if (collision.collider.transform.root.tag.Contains("Station"))
         {
             transform.root.GetComponent<MDestroyable>().TakeDamage(15);

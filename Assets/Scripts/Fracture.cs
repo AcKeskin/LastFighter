@@ -22,6 +22,7 @@ public abstract class MDestroyable:MonoBehaviour
 public class Fracture : MDestroyable
 {
     public GameObject fractured;
+    Rigidbody rb;
 
     private void Awake()
     {
@@ -43,22 +44,12 @@ public class Fracture : MDestroyable
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.collider.gameObject.tag == "Rocket" && collision.collider.gameObject.transform.root != null)
-        {
-            if (collision.collider.gameObject.transform.root.tag == "Player")
+        var root = collision.collider.gameObject.transform.root;
+            if (root.tag == "Station")
             {
-                collision.collider.gameObject.transform.root.GetComponent<SpaceShipControl>().CashUpdate(250);
-                this.TakeDamage(collision.collider.gameObject.transform.root.GetComponent<SpaceShipControl>().bulletDMGs[1]);
+                root.GetComponent<MDestroyable>().TakeDamage(200);
+                this.TakeDamage(200);
             }
-        }
-        else if(collision.collider.gameObject.tag == "Laser" && collision.collider.gameObject.transform.root != null)
-        {
-            if (collision.collider.gameObject.transform.root.tag == "Player")
-            {
-                collision.collider.gameObject.transform.root.GetComponent<SpaceShipControl>().CashUpdate(250);
-                this.TakeDamage(collision.collider.gameObject.transform.root.GetComponent<SpaceShipControl>().bulletDMGs[2]);
-            }
-        }
     }
 
 

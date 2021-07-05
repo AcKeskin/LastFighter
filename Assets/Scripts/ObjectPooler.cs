@@ -15,6 +15,8 @@ public class ObjectPooler : MonoBehaviour
 
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDict;
+    public Transform target;
+    public float maxSpeed = 100, minSpeed = 15;
 
     #region Singletonish
     public static ObjectPooler Instance; // Some sort of singleton here
@@ -39,6 +41,7 @@ public class ObjectPooler : MonoBehaviour
                 obj.SetActive(false);
                 objPool.Enqueue(obj);
                 obj.tag = "Rock";
+                obj.AddComponent<Rigidbody>().useGravity = false;
             }
             poolDict.Add(p.tag, objPool);
         }
@@ -55,6 +58,7 @@ public class ObjectPooler : MonoBehaviour
         spawning.SetActive(true);
         spawning.transform.position = pos;
         spawning.transform.rotation = rot;
+        spawning.GetComponent<Rigidbody>().velocity = (target.position - pos).normalized * Random.Range(minSpeed,maxSpeed) ;
 
         poolDict[tag].Enqueue(spawning);
         return spawning;

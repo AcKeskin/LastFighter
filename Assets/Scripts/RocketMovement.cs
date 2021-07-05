@@ -10,6 +10,7 @@ public class RocketMovement : MonoBehaviour
     public float explosionRadius = 20f;//The radius of explosion
     private float explosionForce = 5000f;// The strength of explosion
     public GameObject explosion ;
+    public float dmg;
 
     // Start is called before the first frame update
     void Start()
@@ -39,26 +40,34 @@ public class RocketMovement : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.gameObject.tag != "Player")
+        collision.collider.gameObject.TryGetComponent<MDestroyable>(out var md);
+        if(md != null)
         {
-            Destroy(this.gameObject);
+            md.TakeDamage(dmg);
         }
+        else if (collision.collider.transform.root.TryGetComponent<MDestroyable>(out var dest))
+        {
+            dest.TakeDamage(dmg);
+        }
+
+            Explode();
+            Destroy(this.gameObject);
+
     }
 
-    private void OnDestroy()
+    public void Explode()
     {
         var expo = Instantiate(explosion, transform.position, transform.rotation);
         Collider[] toBlow = Physics.OverlapSphere(transform.position, explosionRadius);
-        foreach(Collider c in toBlow)
+        foreach (Collider c in toBlow)
         {
             Rigidbody r = c.GetComponent<Rigidbody>();
-            if( r != null)
+            if (r != null)
             {
-                r.AddExplosionForce(explosionForce,c.transform.position,explosionRadius);
+                r.AddExplosionForce(explosionForce, c.transform.position, explosionRadius);
             }
         }
         Destroy(expo, 2.5f);
-        
-    }
 
+    }
 }
