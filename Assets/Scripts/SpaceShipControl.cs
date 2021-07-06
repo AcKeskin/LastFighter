@@ -80,7 +80,7 @@ public class SpaceShipControl : MDestroyable
     void Start()
     {
         health = maxHealth;
-        bulletDMGs = new float[3] { 5,50,85};
+        bulletDMGs = new float[3] { 8,70,95};
         currentBullet = BulletType.Bullet;
         AmmoCounts = new int[3] { 300, 0, 0}; // Only turret has ammo at the beginning
         cashText = GameObject.Find("t_Cash").GetComponent<Text>();
@@ -89,8 +89,7 @@ public class SpaceShipControl : MDestroyable
         currentWeaponIcon = GameObject.Find("WeaponIcon");
         currentWeaponIcon.GetComponent<RawImage>().texture = WeaponIcons[(int)currentBullet];
         ammoText = GameObject.Find("BulletCount").GetComponent<Text>();
-        ammoText.text = AmmoCounts[(int)currentBullet] +"";
-        CashUpdate(99500);
+        ammoText.text = AmmoCounts[(int)currentBullet] +""; 
         lastColorOfCrosshair = Color.white;
         ShipModel = GameObject.Find("SpaceShip");
         exhaust = GetComponentInChildren<ParticleSystem>().main;
@@ -143,6 +142,10 @@ public class SpaceShipControl : MDestroyable
         {
             AmmoCounts[(int)currentBullet] += 10;
             UpdateAmmo();
+        }
+        if (Input.GetKeyDown(KeyCode.KeypadMinus))
+        {
+            CashUpdate(250);
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -358,12 +361,21 @@ public class SpaceShipControl : MDestroyable
             if(f != null)
             {
                 f.TakeDamage(bulletDMGs[0]*2);
-            }else if (hit.collider.gameObject.transform.parent != null)
+                if (f.health <= 0)
+                {
+                    CashUpdate(250);
+                }
+            }
+            else if (hit.collider.gameObject.transform.parent != null)
             {
                 hit.collider.gameObject.transform.parent.TryGetComponent<MDestroyable>(out var p);
                 if (p != null)
                 {
                     p.TakeDamage(bulletDMGs[0] * 2);
+                    if(p.health <= 0)
+                    {
+                        CashUpdate(250);
+                    }
                 }
             }
 

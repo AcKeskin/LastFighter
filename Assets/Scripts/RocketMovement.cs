@@ -40,7 +40,7 @@ public class RocketMovement : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        collision.collider.gameObject.TryGetComponent<MDestroyable>(out var md);
+        collision.gameObject.TryGetComponent<MDestroyable>(out var md);
         if(md != null)
         {
             md.TakeDamage(dmg);

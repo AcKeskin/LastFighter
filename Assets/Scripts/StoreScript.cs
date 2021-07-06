@@ -144,6 +144,7 @@ public class StoreScript : MonoBehaviour
     {
         if (sc.cash >= lrof_cost)
         {
+            sc.CashUpdate(-lrof_cost);
             lrof_cost =(int)(lrof_cost * 1.1f);
             var button = GameObject.Find("b_LIncreaseROF").GetComponent<Button>();
             button.GetComponentInChildren<Text>().text = lrof_cost + " $";
@@ -165,6 +166,7 @@ public class StoreScript : MonoBehaviour
     {
         if (sc.cash >= ldmg_cost)
         {
+            sc.CashUpdate(-ldmg_cost);
             ldmg_cost = (int)(ldmg_cost * (1 + (0.1f * sc.laserDMGCount)));
             var button = GameObject.Find("b_LIncreaseDMG").GetComponent<Button>();
             button.GetComponentInChildren<Text>().text = ldmg_cost + " $";
@@ -189,6 +191,7 @@ public class StoreScript : MonoBehaviour
     {
         if (sc.cash >= rrof_cost)
         {
+            sc.CashUpdate(-rrof_cost);
             rrof_cost = (int)((1+(0.1f*sc.rocketROFCount)) * rrof_cost);
             var button = GameObject.Find("b_RIncreaseROF").GetComponent<Button>();
             button.GetComponentInChildren<Text>().text = rrof_cost + " $";
@@ -210,6 +213,7 @@ public class StoreScript : MonoBehaviour
     {
         if (sc.cash >= rdmg_cost)
         {
+            sc.CashUpdate(-rdmg_cost);
             rdmg_cost = (int)(1.1f * rdmg_cost);
             var button = GameObject.Find("b_RIncreaseDMG").GetComponent<Button>();
             button.GetComponentInChildren<Text>().text = rdmg_cost + " $";
@@ -231,6 +235,7 @@ public class StoreScript : MonoBehaviour
 
     public void TurretROFUpgrade()
     {
+        sc.CashUpdate(-trof_cost);
         if (sc.cash >= trof_cost)
         {
             trof_cost = (int)(1.1f*trof_cost);
@@ -254,6 +259,7 @@ public class StoreScript : MonoBehaviour
     {
         if (sc.cash >= tdmg_cost)
         {
+            sc.CashUpdate(-tdmg_cost);
             tdmg_cost = (int)(1.1f * tdmg_cost);
             var button = GameObject.Find("b_TIncreaseDMG").GetComponent<Button>();
             button.GetComponentInChildren<Text>().text = tdmg_cost + " $";

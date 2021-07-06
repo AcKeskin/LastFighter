@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public abstract class MDestroyable:MonoBehaviour
@@ -12,7 +13,7 @@ public abstract class MDestroyable:MonoBehaviour
     public virtual void TakeDamage(float dmg)
     {
         health -= dmg;
-        print("Took " + dmg + " dmg");
+        print("Remaining health: "+health);
         if(health <= 0)
         {
             Explode();
@@ -23,10 +24,20 @@ public class Fracture : MDestroyable
 {
     public GameObject fractured;
     Rigidbody rb;
+    private Canvas canvas;
+    private GameObject arrow;
+    private GameObject Player;
 
     private void Awake()
     {
+        Player = GameObject.Find("Spaceship Container");
+        canvas = GetComponentInChildren<Canvas>();
         health = 100;
+    }
+
+    private void Update()
+    {
+        canvas.transform.LookAt(Player.transform.position);
     }
 
     public override void Explode()

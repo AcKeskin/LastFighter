@@ -6819,7 +6819,7 @@ MonoBehaviour:
   center_speed: 5
   center_lock: 0
   invertY: 0
-  deadzoneRadius: 30
+  deadzoneRadius: 45
   mouseSensivity: 2
   deadzoneRect:
     serializedVersion: 2
@@ -9209,8 +9209,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db76fb3bbd307e74b9793be4d406e52f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  innerRadius: 600
-  outerRadius: 1350
+  innerRadius: 1000
+  outerRadius: 1550
 --- !u!114 &1421493621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9248,7 +9248,8 @@ MonoBehaviour:
     - {fileID: 100000, guid: 8f445961f3af4734eab6b615aef5f1e5, type: 3}
     size: 5
   target: {fileID: 834907663}
-  speed: 40
+  maxSpeed: 100
+  minSpeed: 15
 --- !u!1 &1434979347
 GameObject:
   m_ObjectHideFlags: 0
