@@ -153,7 +153,6 @@ public class SpaceShipControl : MDestroyable
             currentWeaponIcon.GetComponent<RawImage>().texture = WeaponIcons[(int)currentBullet];
             ammoText.text = AmmoCounts[(int)currentBullet] + "";
 
-            Time.timeScale = 0.1f;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {

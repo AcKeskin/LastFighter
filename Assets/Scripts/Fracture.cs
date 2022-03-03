@@ -38,6 +38,9 @@ public class Fracture : MDestroyable
     private void Update()
     {
         canvas.transform.LookAt(Player.transform.position);
+        var moveVec = (Player.transform.position - transform.position);
+        moveVec = moveVec.normalized * 2;
+        canvas.transform.localPosition = moveVec;
     }
 
     public override void Explode()

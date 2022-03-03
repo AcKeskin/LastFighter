@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SpawnAsteroids : MonoBehaviour
 {
     ObjectPooler objectPooler;
+    EnemyIndicatorManager iManager;
 
     public float innerRadius = 500f; //inner radius of ring that asteroids will be spawned
     public float outerRadius = 1200f; //outer radius of ring that asteroids will be spawned
@@ -12,6 +14,7 @@ public class SpawnAsteroids : MonoBehaviour
     private void Start()
     {
         objectPooler = ObjectPooler.Instance;
+        iManager = GameObject.FindObjectOfType<EnemyIndicatorManager>();
     }
 
     private void FixedUpdate()
@@ -19,10 +22,11 @@ public class SpawnAsteroids : MonoBehaviour
         if(Input.GetKeyDown(KeyCode.DownArrow))
         {
             print("spawning");
-            objectPooler.SpawnFromPool("asteroid", RandomPos(), RandomRot());
+            var item = objectPooler.SpawnFromPool("asteroid", RandomPos(), RandomRot());
+            iManager.BindIndicator(item);
         }
     }
-
+    
     public Vector3 RandomPos()
     {
         return Random.onUnitSphere* Random.Range(innerRadius, outerRadius);

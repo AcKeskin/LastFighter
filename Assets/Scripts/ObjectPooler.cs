@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class ObjectPooler : MonoBehaviour
@@ -47,6 +48,30 @@ public class ObjectPooler : MonoBehaviour
         }
 
     }
+    public List<GameObject> GetActiveObjects(string tag = "")
+    {
+        List<GameObject> list = new List<GameObject>();
+        if (tag.Equals(""))
+        {
+            foreach (var item in poolDict.Values)
+            {
+                list.AddRange(item.Where(x => x.activeSelf).ToList());
+            }
+        }
+        else
+        {
+            if (!poolDict.ContainsKey(tag))
+            {
+                Debug.LogWarning("No pool with tag " + tag);
+                return null;
+            }
+            var item = poolDict[tag];
+            list.AddRange(item.Where(x => x.activeSelf).ToList());
+        }
+        Debug.Log(list.Count + " active objects returned");
+        return list;
+    }
+
     public GameObject SpawnFromPool(string tag, Vector3 pos, Quaternion rot)
     {
         if (!poolDict.ContainsKey(tag))
